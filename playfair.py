@@ -3,6 +3,8 @@
 #
 # Authors - Ryan Shaw, Christian Torrazo, & Hayden Seiberlich
 # Version - September 27, 2026
+# 
+# KEY USED FOR BOTH ENCRYPTION AND DECRYPTION - YOU LIKE JAZZ
 
 # Reference of all letters while combining "I/J" into "I"
 alphabet = ['A', 'B', 'C', 'D', 'E',
@@ -57,7 +59,6 @@ def find_position(matrix, char):
             return r, row.index(char)
     return None
 
-
 # Build out playfair version of plaintext
 def prepare_text(text):
     # Set up text from plaintext file
@@ -87,7 +88,6 @@ def prepare_text(text):
         prepared += 'X'
     return prepared
 
-
 # Encrypt a single pair of characters
 def encrypt_pairs(matrix, p1, p2):
     # Locate row and column value for each character in the matrix
@@ -104,7 +104,6 @@ def encrypt_pairs(matrix, p1, p2):
     else:
         # Base case: replace pair with row of first, column of second, and replace with row of second, column of first
         return matrix[r1][c2] + matrix[r2][c1]
-
 
 # Outputs encrypted text to a new text file in pairs
 def output_playfair_encryption(key):
@@ -130,9 +129,8 @@ def output_playfair_encryption(key):
     with open("out1.txt", 'w', encoding='utf-8') as file:
         file.write(formatted_ciphertext)
 
-
-# DECRYPT FUNCTION
-def decrypt_message(matrix, char1, char2):
+# DECRYPT FUNCTION(S)
+def decrypt_pairs(matrix, char1, char2):
     # Tracks the row/column position of each character in the matrix
     r1, c1 = find_position(matrix, char1)
     r2, c2 = find_position(matrix, char2)
@@ -154,7 +152,6 @@ def decrypt_message(matrix, char1, char2):
 
     return new_char1 + new_char2
 
-
 def decrypt(matrix, ciphertext):
     # Set up text from ciphertext file
     ciphertext = "".join([c.upper() for c in ciphertext if c.isalpha()]).replace('J', 'I')
@@ -169,11 +166,10 @@ def decrypt(matrix, ciphertext):
         char2 = ciphertext[i + 1]
 
         # Decrypts the message and adds it to the plaintext string
-        plaintext += decrypt_message(matrix, char1, char2)
+        plaintext += decrypt_pairs(matrix, char1, char2)
         i += 2
 
     return plaintext
-
 
 # Outputs decrypted text to a new text file
 def output_playfair_decryption(key):
@@ -190,7 +186,7 @@ def output_playfair_decryption(key):
 
     # Iterates through ciphertext using established functions
     for i in range(0, len(ciphertext) - 1, 2):
-        plaintext += decrypt_message(matrix, ciphertext[i], ciphertext[i + 1])
+        plaintext += decrypt_pairs(matrix, ciphertext[i], ciphertext[i + 1])
 
     # Output to new file.
     with open("out2.txt", 'w', encoding='utf-8') as file:
@@ -199,12 +195,11 @@ def output_playfair_decryption(key):
 
 # --- USER INPUT ---
 mode = input("Encrypt(e) or Decrypt(d)? ")
-
 key = input("Enter playfair keyword: ")
 
 while(key):
-    if key:
-        key = key.strip().lower().replace("j", "i")
+    key =  key.replace(" ","").lower().replace("j", "i")
+    if key.isalpha():
         print(f"Valid key received: {key}")
         break
     else:
@@ -223,3 +218,4 @@ while(mode):
     else:
         print("Invalid mode inputted.")
         mode = input("Encrypt(e) or Decrypt(d)? ")
+
